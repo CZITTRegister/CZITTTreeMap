@@ -1,0 +1,25 @@
+      
+      
+      <body>
+          <div id="mapid"></div>
+          <script>
+                    let mapOptions = {
+                              center: [11.01, -61.1],
+                              zoom: 7,
+                    };
+                    const myMap = L.map("mapid", mapOptions);
+                    const Maptiles_A = L.tileLayer(
+                              'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                              {
+                              maxZoom: 19,
+                              attribution: '&copy; <a
+href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                              });
+                              
+                              Maptiles_A.addTo(myMap).setOpacity(0.5);
+                              </script>
+                              
+       </body>
+            
+            
+</html>
