@@ -3,9 +3,7 @@
   
     <head>
         <title>My Interactive Map</title>
-        <header>
-          HIII
-        </header>
+        
               
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
             integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
@@ -18,4 +16,35 @@
                 
               
           <link rel="stylesheet" href="style.css"/>
-  </head>
+ </head>
+  
+  <body>
+	<div id="mapid"></div>
+	
+	<script>
+		//javascript
+		let mapOptions = {
+				center: [11.01, -61.1],
+				zoom: 7,
+			};
+		const myMap = L.map("mapid", mapOptions);
+		
+		const Maptiles_A = L.tileLayer(
+				'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+				{
+				maxZoom: 19,
+				attribution: '&copy; <a herf="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+			});
+			
+		Maptiles_A.addTo(myMap);
+		
+	</script>
+	
+	
+                              
+       </body>
+            
+            
+</html>
+
+       
