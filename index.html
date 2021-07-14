@@ -38,6 +38,38 @@
 			
 		Maptiles_A.addTo(myMap);
 		
+Maptiles_A.addTo(myMap).setOpacity(0.5);
+
+let treeLayer= L.geoJSON(null,
+                {onEachFeature:
+                    function (feature, layer) {
+                    layer.bindPopup("Trees")
+                      
+                    },
+              
+                  pointToLayer: function(feature, latlng) {
+                    
+                  return L.marker(latlng
+                                       )
+                  },
+                }
+                );
+		
+		
+treeLayer.addTo(myMap);
+
+let treeData;
+
+fetch("./treesdata_wgs84.geojson")
+      .then(response=> {
+        return response.json();
+      })
+
+.then(data => {
+    return treeData = data;
+    
+})
+.then(data => treeLayer.addData(data));
 	</script>
 	
 	
