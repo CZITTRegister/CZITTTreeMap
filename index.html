@@ -43,9 +43,8 @@ Maptiles_A.addTo(myMap).setOpacity(0.5);
 let treeLayer= L.geoJSON(null,
                 {onEachFeature:
                     function (feature, layer) {
-                    layer.bindPopup(~Tree Type: ${feature.properties.TYPE}~)
-                      
-                    },
+                    layer.bindPopup("<h1>Tree Type:" + feature.properties.TYPE + "</h1>")
+                  },
               
                   pointToLayer: function(feature, latlng) {
                    let iconOptions = {
