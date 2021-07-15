@@ -16,6 +16,14 @@
                 
               
           <link rel="stylesheet" href="style.css"/>
+	    
+	  <script src=.leaflet-sidebar.js">
+	</script>						    
+	<link rel="stylesheet" href=".leaflet-sidebar.css"/>						    
+	    
+	    
+	    
+	    
  </head>
   
   <body>
@@ -64,6 +72,20 @@ let treeLayer= L.geoJSON(null,
 		
 		
 treeLayer.addTo(myMap);
+	
+	
+let sidebar=L.control.sidebar({
+	autopan: false,
+	closeButton: true,
+	container: "sidebar",
+	position: "right"
+}).addTo(myMap);
+	myMap.on("click", function(){sidebar.close()});
+	
+	
+	
+	
+	
 
 let treeData;
 
