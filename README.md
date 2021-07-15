@@ -1,3 +1,3 @@
 # OnlineMapTraining
 Testing
-https://czittregister.github.io/OnlineMapTraining/
+https://czittregister.github.io/CZITTTreeMap/
