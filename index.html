@@ -80,6 +80,29 @@ let sidebar=L.control.sidebar({
 	container: "sidebar",
 	position: "right"
 }).addTo(myMap);
+		
+let info=`<h1>Tree Catalog - The Carbon Zero Institute of Trinida and Tobago</h1>
+	<h2>Purpose:</h2>
+	<h2>Contributors:</h2>`;
+
+let panelContent={
+	id: 'info',
+	tab: '<img class=sidebar-tab-icon" src="./logos/logo_color.png'>",
+	pane: info,
+	title: "Information",
+	position: "top"
+};
+
+sidebar.addPanel(panelcontent);
+		
+		
+		
+		
+		
+		
+		
+		
+		
 	myMap.on("click", function(){sidebar.close()});
 	
 	
