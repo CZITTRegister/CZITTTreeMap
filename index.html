@@ -95,15 +95,15 @@ let panelContent={
 
 sidebar.addPanel(panelContent);
 		
+sidebar.addPanel({
+        id: 'ghlink',
+        tab: '<img class ="sidebar-tab-icon" src="github_logo.png">',
+        button: 'https://github.com/CZITTRegister/OnlineMapTraining',
+        position: "bottom'
+});
+
 		
-		
-		
-		
-		
-		
-		
-		
-	myMap.on("click", function(){sidebar.close()});
+		myMap.on("click", function(){sidebar.close()});
 	
 	
 	
