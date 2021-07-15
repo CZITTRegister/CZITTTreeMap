@@ -18,9 +18,3 @@ html,body{
  height: 32px;
 }
 
-sidebar.addPanel({
-        id: 'ghlink',
-        tab: '<img class ="sidebar-tab-icon" src="github_logo.png">',
-        button: 'https://github.com/CZITTRegister/OnlineMapTraining',
-        position: "bottom'
-});
