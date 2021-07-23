@@ -1,4 +1,238 @@
 <!DOCTYPE html>
+<html>
+  
+    <head>
+        <title>CZITT Register Map (DEMO)</title>
+        
+              
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+            integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+            crossorigin=""/>
+             
+        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+            integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+             crossorigin="">
+          </script>
+        
+	      <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+    	  <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+      	<script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+	    
+      	<script src="./plugins/sidebar/leaflet-sidebar.js"></script>
+        <link rel="stylesheet" href="./plugins/sidebar/leaflet-sidebar.css" />
+
+         <link rel="stylesheet" href="style.css"/>
+	    
+	  <script src="leaflet-sidebar.js">
+	</script>
+	<link rel="stylesheet" href="leaflet-sidebar.css"/>
+	    
+	    
+	    
+	    
+ </head>
+  
+  <body>
+	<div id="mapid"></div>
+	
+	<script>
+		//javascript
+		let mapOptions = {
+				center: [11.01, -61.1],
+				zoom: 7,
+			};
+		const myMap = L.map("mapid", mapOptions);
+		
+		const Maptiles_A = L.tileLayer(
+				'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+				{
+				maxZoom: 19,
+				attribution: '&copy; <a herf="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+			});
+			
+		Maptiles_A.addTo(myMap);
+		
+Maptiles_A.addTo(myMap).setOpacity(0.5);
+
+
+//adding copyright/name control to map //taken from leaflet tutorials
+      L.Control.Watermark = L.Control.extend({
+        onAdd: function (map) {
+          let watermark = L.DomUtil.create("div");
+
+          watermark.innerHTML = `<img alt="czitt's logo" src="CZITT_LOGO.png">
+      														<div>CZITT CORE &copy; Carbon Zero Institute of Trinidad and Tobago 2021</div>`;
+          watermark.id = "watermark";
+          watermark.style.class = "leaflet-control-attribution";
+
+          return watermark;
+        },
+
+        onRemove: function (map) {
+          // Nothing to do here
+        },
+      });
+
+      L.control.watermark = function (opts) {
+        return new L.Control.Watermark(opts);
+      };
+
+      L.control.watermark({ position: "bottomleft" }).addTo(myMap);
+      //end- adding copyright
+
+      //FORMATTING DATA LAYER
+      let marker_icon = L.icon({
+        iconUrl: "icons/marker-icon.png",
+        iconAnchor: [12, 20],
+      });
+      let selected_icon = L.icon({
+        iconUrl: "icons/highlighted-icon.png",
+        iconAnchor: [12, 20],
+        popupAnchor: [0, -10],
+      });
+      let tree_icon = L.icon({
+        iconUrl: "icons/treeicon.png",
+        iconSize: [32, 32],
+        iconAnchor: [16, 16],
+        popupAnchor: [0, -8],
+      });
+      let poui_icon = L.icon({
+        iconUrl: "icons/pouiIcon.png",
+        iconSize: [32, 32],
+        iconAnchor: [16, 16],
+        popupAnchor: [0, -8],
+      });
+
+    
+   
+    let treeLayer= L.geoJSON(null,
+                {onEachFeature:
+										function (feature, layer) {
+										//layer.bindPopup("placeholder text blah blah blah")
+										layer.bindPopup(`
+										<div class="tree-type"> ${feature.properties["NUMBER"]}: ${feature.properties["TREE TYPE"]}</div>
+										<div class="timestamp">${feature.properties["PHOTO DATE"]}</div>
+										<img class="photo" src="treeicon.png" alt="Photo of Tree">
+										<div class="offset">Est.Offset: ${feature.properties["ESTIMATED"]}</div>
+										<div class="beneficiary">Beneficiary: ${feature.properties["ORGANISATI"]}</div>
+										<div class="planter">Planter: ${feature.properties["INDIVIDUAL"]}</div>
+										<div class="risk-level">Risk: ${feature.properties["RISKLEVEL"]}</div>
+										`)
+                  },
+              
+                  pointToLayer: function(feature, latlng) {
+                   let iconOptions = {
+			iconUrl: "treeicon.png",
+			iconSize: [32, 32],
+			iconAnchor: [16, 16],
+			popupAnchor: [0, -8]
+		   };
+			let treeIcon = L.icon(iconOptions);
+			   
+			   
+                  return L.marker(latlng, {icon: treeIcon})
+                                       
+                  }
+                
+		});
+		
+		
+treeLayer.addTo(myMap);
+	
+	
+let sidebar=L.control.sidebar({
+	autopan: false,
+	closeButton: true,
+	container: "sidebar",
+	position: "right"
+}).addTo(myMap);
+		
+let info=`<h1>Carbon Offset Registry - The Carbon Zero Institute of Trinidad and Tobago</h1>
+	<h2>Purpose:</h2>
+	<p> Carbon emissions from fossil fuels, the inustrial sector and land use is the largest source of global Greenhouse Gas (GHG) emissions.
+	We must act now and do our part to combat the exacerbated effects of climate change.
+	The CZITT 1000 trees challenge initiative partners with schools, clubs and corporations to plant and record trees which are then geotagged.
+	Our goal is to establish a carbon offset registry in which its efforts are driven towards reducing carbon emissions via carbon sequestration as a proven climate change mitigation strategy.</p>
+	
+	
+	
+	
+	
+	
+	<h2>Contributors:</h2>
+	<p>Ryan Seemungal, Data Visualisation Specialist</p>
+	<p>Brandon Serrao, Cartography Instructor</p>
+	<p>Sweelan Renaud, Program Assistant at Advisors Next Door</p>
+	<p>Aashrita Mohess, Intern at Advisors Next Door </p>
+	
+	<h4> Contact:</4>
+	<p> Contact us at <a href="mailto:advisorsnextdoor@gmail.com"target="_blank">advisorsnextdoor@gmail.com</a> for more information</p>
+	
+	<p>Visit <a href= "https://czitt-ed.org/"target="_blank">Caribbean E-Learning by the Carbon Zero Institute of Trinidad and Tobago</a> to learn more about this project and how you can get involved</p>
+	
+	<p> Date Last Updated: 19th July 2021</p>
+	
+	<p>CZITT CORE &copy; Carbon Zero Institute of Trinidad and Tobago 2021</p>
+	
+	`;
+
+let panelContent={
+	id: 'info',
+	tab: "<img class='sidebar-tab-icon' src='logo_color.png'>",
+	pane: info,
+	title: "Information",
+	position: "top"
+};
+
+sidebar.addPanel(panelContent);
+		
+sidebar.addPanel({
+        id: 'ghlink',
+        tab: '<img class ="sidebar-tab-icon" src="github_logo.png">',
+        button: 'https://github.com/CZITTRegister/OnlineMapTraining',
+        position: 'bottom'
+});
+
+		
+		myMap.on("click", function(){sidebar.close()});
+	
+	
+	
+	
+	
+
+let treeData;
+
+fetch("./treesdata_wgs84.geojson")
+      .then(response=> {
+        return response.json();
+      })
+
+.then(data => {
+    return treeData = data;
+    
+})
+.then(data => treeLayer.addData(data));
+	</script>
+	
+	
+                              
+       </body>
+            
+            
+</html>
+
+       
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
 <!-- CONTRIBUTING TO INTERNSHIP FOR ADVISORS NEXT DOOR & CARBON ZERO INSTITUTE OF TRINIDAD AND TOBAGO -->
 <html>
   <head>
