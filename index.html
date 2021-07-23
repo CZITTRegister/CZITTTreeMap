@@ -116,10 +116,23 @@ Maptiles_A.addTo(myMap).setOpacity(0.5);
 										<div class="offset">Est.Offset: ${feature.properties["ESTIMATED"]}</div>
 										<div class="beneficiary">Beneficiary: ${feature.properties["ORGANISATI"]}</div>
 										<div class="planter">Planter: ${feature.properties["INDIVIDUAL"]}</div>
-										<div class="risk-level">Risk: ${feature.properties["RISKLEVEL"]}</div>
+			
+		<div class="risk-level">Risk: ${feature.properties["RISKLEVEL"]}</div>
 										`)
-                  },
+                },
               
+		 function treeToLayer(feature, latlng) {
+        let marker = L.marker(latlng, {
+          title: "click to inspect, double-click to zoom in", //adds tooltip
+          riseOnHover: true, //brings marker on top of others on hover
+          icon: tree_icon,
+        });
+
+        marker.on("dblclick", function (event) {
+          console.log(event.target);
+          myMap.flyTo(event.latlng, 17, { duration: 1, easeLinearity: 0.2 });
+        });		 
+		 
                   pointToLayer: function(feature, latlng) {
                    let iconOptions = {
 			iconUrl: "treeicon.png",
@@ -147,30 +160,22 @@ let sidebar=L.control.sidebar({
 	position: "right"
 }).addTo(myMap);
 		
-let info=`<h1>Carbon Offset Registry - The Carbon Zero Institute of Trinidad and Tobago</h1>
-	<h2>Purpose:</h2>
-	<p> Carbon emissions from fossil fuels, the inustrial sector and land use is the largest source of global Greenhouse Gas (GHG) emissions.
-	We must act now and do our part to combat the exacerbated effects of climate change.
-	The CZITT 1000 trees challenge initiative partners with schools, clubs and corporations to plant and record trees which are then geotagged.
-	Our goal is to establish a carbon offset registry in which its efforts are driven towards reducing carbon emissions via carbon sequestration as a proven climate change mitigation strategy.</p>
-	
-	
-	
-	
-	
-	
-	<h2>Contributors:</h2>
-	<p>Ryan Seemungal, Data Visualisation Specialist</p>
-	<p>Brandon Serrao, Cartography Instructor</p>
-	<p>Sweelan Renaud, Program Assistant at Advisors Next Door</p>
-	<p>Aashrita Mohess, Intern at Advisors Next Door </p>
-	
-	<h4> Contact:</4>
-	<p> Contact us at <a href="mailto:advisorsnextdoor@gmail.com"target="_blank">advisorsnextdoor@gmail.com</a> for more information</p>
-	
-	<p>Visit <a href= "https://czitt-ed.org/"target="_blank">Caribbean E-Learning by the Carbon Zero Institute of Trinidad and Tobago</a> to learn more about this project and how you can get involved</p>
-	
-	<p> Date Last Updated: 19th July 2021</p>
+let info = `<h1>Carbon Offset Register - The Carbon Zero Institute of Trinidad and Tobago</h1>
+      <h2>Purpose:</h2>
+      <p> Carbon emissions from fossil fuels, the inustrial sector and land use is the largest source of global Greenhouse Gas (GHG) emissions.
+      We must act now and do our part to combat the exacerbated effects of climate change.
+      The CZITT 1000 trees challenge initiative partners with schools, clubs and corporations to plant and record trees which are then geotagged.
+      Our goal is to establish a carbon offset registry in which its efforts are driven towards reducing carbon emissions via carbon sequestration as a proven climate change mitigation strategy.</p>
+      <h2>Contributors:</h2>
+      <p><a href="https://www.linkedin.com/in/ryan-seemungal-gis-design/" target="_blank" style="color: black;" class="contributor-name">Ryan Seemungal</a>, <span class="contributor-title">Data Visualization Specialist</span></p>
+      <p><a href="https://www.linkedin.com/in/brandon-serrao/" target="_blank" style="color: black;" class="contributor-name">Brandon Serrao</a>, <span class="contributor-title">Cartography & Web Mapping Instructor</span></p>
+      <p><a href="https://www.linkedin.com/in/sweelanrenaud/" target="_blank" style="color: black;" class="contributor-name">Sweelan Renaud</a>, <span class="contributor-title">Program Assistant at Advisors Next Door</span></p>
+      <p><a href="https://www.linkedin.com/in/aashritamohess/" target="_blank" style="color: black;" class="contributor-name">Aashrita Mohess</a>, <span class="contributor-title">Intern at Advisors Next Door</span></p>
+      <h4> Contact:</h4>
+      <p> Contact us at <a href="mailto:advisorsnextdoor@gmail.com"target="_blank">advisorsnextdoor@gmail.com</a> for more information</p>
+      <p>Visit <a href= "https://czitt-ed.org/"target="_blank">Caribbean E-Learning by the Carbon Zero Institute of Trinidad and Tobago</a> to learn more about this project and how you can get involved</p>
+      <p> Date Last Updated: 23rd July 2021</p>
+
 	
 	<p>CZITT CORE &copy; Carbon Zero Institute of Trinidad and Tobago 2021</p>
 	
@@ -185,6 +190,7 @@ let panelContent={
 };
 
 sidebar.addPanel(panelContent);
+sidebar.open("info");
 		
 sidebar.addPanel({
         id: 'ghlink',
@@ -196,7 +202,32 @@ sidebar.addPanel({
 		
 		myMap.on("click", function(){sidebar.close()});
 	
-	
+	let treesLayerGroup = L.layerGroup().addTo(myMap);
+      let highlighted = null; //storage for current highlighted selection
+
+      //EXP-FETCHING AND SORTING Data
+
+      let beneficiaries = {}; //container to hold the separated data per beneficiary org
+      let org_control;
+
+      //fetch("./treesdata_wgs84.geojson")
+      fetch("trees_data.geojson")
+        .then((response) => {
+          return response.json();
+        })
+        .then(function (json) {
+          data = json.features;
+          //add sidebar panel to hold this
+          sidebar.addPanel({
+            id: "charts",
+            tab: '<img class="sidebar-tab-icon" src="chart_g&b.png">', //placeholder
+            title: "Graphs",
+            pane: '<h2>Total Trees Planted per Organization</h2><p>Hover to show values:</p><div id="chartdiv"></div>',
+            position: "top",
+          });
+          for (let feature of data) {
+            //console.log(feature);
+            let org = feature.properties.BENEFICIARY;
 	
 	
 	
